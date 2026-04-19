@@ -3,35 +3,40 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import { 
   Maximize2, ExternalLink, X, Camera, 
-  Globe, Activity, Ghost, Sparkles, 
-  Code, Play, MousePointer2, ShieldCheck, Zap
+  Activity, 
+  
 } from 'lucide-react'
 import './App.css'
 
 const DEMO_NODES = [
-  { id: '1', title: 'CREATIVE_ARCHIVE', url: 'https://example.com', icon: <Camera size={18} />, color: '#00ff00', desc: 'Visual storytelling node.' },
-  { id: '2', title: 'SYSTEM_DASHBOARD', url: 'https://example.com', icon: <Activity size={18} />, color: '#00ff00', desc: 'Real-time telemetry.' },
-  { id: '3', title: 'GLITCH_LAB', url: 'https://example.com', icon: <Ghost size={18} />, color: '#ff00ff', desc: 'Experimental noise.' },
-  { id: '4', title: 'KNOWLEDGE_BASE', url: 'https://example.com', icon: <Globe size={18} />, color: '#e91e63', desc: 'Liberated libraries.' }
+  { id: '1', title: 'CLIENT_GALLERY', url: 'https://example.com', icon: <Camera size={18} />, color: '#00ff00', desc: 'Photography focus.' },
+  { id: '2', title: 'SYSTEM_ARCHITECTURE', url: 'https://example.com', icon: <Activity size={18} />, color: '#00ff00', desc: 'Dev/SysAdmin focus.' },
+  { id: '3', title: 'UI_UX_STREAMS', url: 'https://example.com', icon: <Layers size={18} />, color: '#ff00ff', desc: 'Designer focus.' }
 ]
 
-function PixelsPortalTemplate({ isDemo = true }) {
+function Layers({ size }: { size: number }) { return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2" /><polyline points="2 17 12 22 22 17" /><polyline points="2 12 12 17 22 12" /></svg> }
+
+function PixelsPortalTemplate() {
   const [activeNode, setActiveNode] = useState<string | null>(null)
   const [hoveredNode, setHoveredId] = useState<string | null>(null)
-  const nodes = isDemo ? DEMO_NODES : [];
+  const [theme, setTheme] = useState<'noir' | 'minimal'>('noir')
 
   return (
-    <div className="portal-template-container">
+    <div className={`portal-template-container theme-${theme}`}>
       <header className="portal-header">
         <Link to="/" className="exit-btn">BACK_TO_PLATFORM</Link>
         <div className="portal-title">
           <h1>PIXELS<span>PORTAL</span></h1>
-          <p>{isDemo ? 'PREVIEW_MODE' : 'LIVE_INSTANCE'} // V1.0</p>
+          <p>DEMO_MODE // THEME: {theme.toUpperCase()}</p>
+        </div>
+        <div className="theme-toggle">
+            <button onClick={() => setTheme('noir')} className={theme === 'noir' ? 'active' : ''}>TERMINAL_NOIR</button>
+            <button onClick={() => setTheme('minimal')} className={theme === 'minimal' ? 'active' : ''}>HD_MINIMALIST</button>
         </div>
       </header>
 
       <main className="node-grid">
-        {nodes.map((n) => (
+        {DEMO_NODES.map((n) => (
           <motion.div key={n.id} className={`node-card ${hoveredNode === n.id ? 'is-hovered' : ''}`} onMouseEnter={() => setHoveredId(n.id)} onMouseLeave={() => setHoveredId(null)}>
             <div className="card-header" style={{ borderBottomColor: n.color }}>
                <div className="card-label">{n.icon} <span>{n.title}</span></div>
@@ -44,6 +49,7 @@ function PixelsPortalTemplate({ isDemo = true }) {
                <iframe src={n.url} title={n.title} style={{ pointerEvents: hoveredNode === n.id ? 'auto' : 'none' }} />
                <div className={`iframe-overlay ${hoveredNode === n.id ? 'hidden' : ''}`}></div>
             </div>
+            <div className="card-footer"><p>{n.desc} // LIVE_RENDER</p></div>
           </motion.div>
         ))}
       </main>
@@ -52,11 +58,10 @@ function PixelsPortalTemplate({ isDemo = true }) {
         {activeNode && (
           <motion.div className="fullscreen-modal" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
              <button className="close-btn" onClick={() => setActiveNode(null)}><X size={32} /></button>
-             <iframe src={nodes.find(n => n.id === activeNode)?.url} />
+             <iframe src={DEMO_NODES.find(n => n.id === activeNode)?.url} />
           </motion.div>
         )}
       </AnimatePresence>
-      <div className="crt-overlay"></div>
     </div>
   )
 }
@@ -77,48 +82,17 @@ function LandingPage() {
           <div className="badge">THE_LINK_SHORTENER_EVOLUTION</div>
           <h1>BEYOND THE LINK.</h1>
           <h1 className="gradient-text">OWN THE SIGNAL.</h1>
-          <p>The sovereign alternative to Linktree. Built for the next generation of coders, photographers, and architects.</p>
+          <p>The sovereign alternative to Linktree. Built for the next generation of creative architects.</p>
           <div className="hero-cta">
-             <button className="btn-primary">GET_YOUR_PP_LINK</button>
+             <a href="mailto:architect@pixels.agency?subject=Creative%20Architect%20Early%20Access" className="btn-primary">GET_YOUR_PP_LINK</a>
              <Link to="/demo" className="btn-secondary">VIEW_DEMO</Link>
           </div>
         </motion.div>
       </header>
 
-      <section className="features">
-         <div className="feature-card">
-            <Zap className="icon" />
-            <h3>INSTANT_DEPLOY</h3>
-            <p>One command deployment of high-fidelity portfolio templates.</p>
-         </div>
-         <div className="feature-card">
-            <ShieldCheck className="icon" />
-            <h3>SOVEREIGN_ROUTING</h3>
-            <p>You own the data. You own the signal. No platform trackers.</p>
-         </div>
-         <div className="feature-card">
-            <MousePointer2 className="icon" />
-            <h3>LIVE_PREVIEW</h3>
-            <p>Interactive, scrollable multi-site layouts for maximum engagement.</p>
-         </div>
-      </section>
-
-      <section className="upcoming">
-         <div className="upcoming-content">
-            <Sparkles className="sparkle-icon" />
-            <h2>2PP.CLICK + MYPP</h2>
-            <p>The partnership of the decade. <strong>mypp</strong> is our upcoming automated portfolio engine. Design your destiny, route it through 2pp.click.</p>
-            <div className="role-tags">
-               <div className="tag"><Code size={12} /> #DEVS</div>
-               <div className="tag"><Play size={12} /> #VIDEOGRAPHERS</div>
-               <div className="tag"><Camera size={12} /> #PHOTOGRAPHERS</div>
-            </div>
-         </div>
-      </section>
-
       <footer className="landing-footer">
-         <div className="footer-line">© 2026 PIXELS AGENCY // KERNEL_ID: NICO_B</div>
-         <div className="footer-line">RECLAIMING THE DIGITAL COMMONS.</div>
+         <div className="footer-line">© 2026 PIXELS AGENCY // ARCHITECTED FOR THE SOVEREIGN INDIVIDUAL</div>
+         <div className="footer-line">ESTABLISHING THE QUIET.</div>
       </footer>
     </div>
   )
@@ -129,8 +103,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/demo" element={<PixelsPortalTemplate isDemo={true} />} />
-        <Route path="/pp" element={<PixelsPortalTemplate isDemo={false} />} />
+        <Route path="/demo" element={<PixelsPortalTemplate />} />
       </Routes>
     </Router>
   )
