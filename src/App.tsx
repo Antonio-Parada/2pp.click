@@ -15,6 +15,7 @@ const ENCLAVE_NODES = [
 
 function App() {
   const [activeNode, setActiveNode] = useState<string | null>(null)
+  const [hoveredNode, setHoveredId] = useState<string | null>(null)
 
   const node = ENCLAVE_NODES.find(n => n.id === activeNode)
 
@@ -22,11 +23,11 @@ function App() {
     <div className="portal-container">
       <header className="portal-header">
         <div className="portal-title">
-          <h1>2PP<span>.CLICK</span></h1>
-          <p>MASTER_CONTROL // PIXELS_AGENCY_PORTAL_V1</p>
+          <h1 className="glitch-text" data-text="PARADA PACE">PARADA<span> PACE</span></h1>
+          <p>MASTER_CONTROL // PIXELS_AGENCY_PORTAL_V2</p>
         </div>
         <div className="portal-meta">
-           ENCLAVE_STATUS: SYNCHRONIZED
+           ENCLAVE_SYNC: 100% // PATH: /PP
         </div>
       </header>
 
@@ -34,9 +35,11 @@ function App() {
         {ENCLAVE_NODES.map((n) => (
           <motion.div 
             key={n.id} 
-            className="node-card"
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
+            className={`node-card ${hoveredNode === n.id ? 'is-hovered' : ''}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            onMouseEnter={() => setHoveredId(n.id)}
+            onMouseLeave={() => setHoveredId(null)}
           >
             <div className="card-header" style={{ borderBottomColor: n.color }}>
                <div className="card-label">
@@ -49,12 +52,17 @@ function App() {
             </div>
             
             <div className="preview-container">
-               <iframe src={n.url} title={n.title} loading="lazy" />
-               <div className="iframe-overlay"></div>
+               <iframe 
+                src={n.url} 
+                title={n.title} 
+                loading="lazy" 
+                style={{ pointerEvents: hoveredNode === n.id ? 'auto' : 'none' }}
+               />
+               <div className={`iframe-overlay ${hoveredNode === n.id ? 'hidden' : ''}`}></div>
             </div>
 
             <div className="card-footer">
-               <p>{n.desc}</p>
+               <p>{n.desc} // SCROLL_ON_HOVER: ACTIVE</p>
             </div>
           </motion.div>
         ))}
@@ -64,13 +72,13 @@ function App() {
         {activeNode && node && (
           <motion.div 
             className="fullscreen-modal"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.98 }}
           >
             <div className="modal-bar">
-               <div className="modal-title">{node.icon} <span>{node.title} // LIVE_RENDER</span></div>
-               <button className="close-btn" onClick={() => setActiveNode(null)}><X size={20} /></button>
+               <div className="modal-title">{node.icon} <span>{node.title} // DIRECT_KERNEL_LINK</span></div>
+               <button className="close-btn" onClick={() => setActiveNode(null)}><X size={24} /></button>
             </div>
             <div className="modal-content">
                <iframe src={node.url} title={node.title} />
@@ -80,8 +88,8 @@ function App() {
       </AnimatePresence>
 
       <footer className="portal-footer">
-        <div>© 2026 PIXELS AGENCY</div>
-        <div>STABILITY: OPTIMAL</div>
+        <div>© 2026 PIXELS AGENCY // ARCHITECT: NICO_B</div>
+        <div>STRENGTH IN THE KERNEL. PEACE IN THE PACE.</div>
       </footer>
 
       <div className="crt-overlay"></div>
